@@ -26,8 +26,9 @@ app.post("/", function(req,res){
 var transpoter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'radhasangcompany@gmail.com',
-        pass: 'qlyf gpbx fmzv gjrr'
+    user: process.env.EMAIL_USER, // यह ईमेल भेजने के लिए है
+    pass: process.env.APP_PASSWORD
+
     }
 });
 
@@ -57,3 +58,4 @@ transpoter.sendMail(mailOption, function(error, info){
 app.listen(3000,function(){
     console.log(`Server is running on http://localhost:${3000}`);
 });
+
