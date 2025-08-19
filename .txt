@@ -1,0 +1,94 @@
+ <section id="contact" class="section" style="background-color: #ecf0f1;">
+        <div class="container">
+            <h2 class="text-center">Get in Touch</h2>
+            <form class="contact-form">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <input type="tel" name="phone" placeholder="Your Phone Number">
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+
+     <section id="contact" class="section" style="background-color: #ecf0f1;">
+    <div class="container">
+        <h2 class="text-center">Get in Touch</h2>
+          <form class="contact-form" action="/send_message" method="POST"></form>
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="tel" name="phone" placeholder="Your Phone Number">
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </div>
+</section>
+
+
+send_email.php
+/send_message
+
+
+
+
+
+
+
+
+
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
+
+const app = express();
+const port = 3000; // Aap koi bhi port number chun sakte hain
+
+// Body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Serving static files (e.g., your HTML file)
+app.use(express.static('index.html')); // Agar aapki index.html file 'public' folder mein hai
+
+// Nodemailer transporter setup
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Aap koi bhi service use kar sakte hain
+    auth: {
+        user: 'radhasangcompany@gmail.com', // Yahan apna email dalein
+        pass: 'ryvfduh@#345ft6446@#$25$#24&78dgt' // Yahan apna email password dalein
+    }
+});
+
+// Form submission route
+app.post('/send_message', (req, res) => {
+    const { name, email, phone, message } = req.body;
+
+    const mailOptions = {
+        from: email,
+        to: 'radhasangcompany@gmail.com', // Message aapko is email par milega
+        subject: 'Naya Message from Website Contact Form',
+        html: `
+            <h2>Contact Form Message</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Message:</strong><br>${message}</p>
+        `
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Message sending failed.');
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send('Message successfully sent!');
+        }
+    });
+});
+
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
